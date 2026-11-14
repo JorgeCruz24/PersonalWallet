@@ -37,7 +37,7 @@ La ejecución E2E general también intentó Firefox y WebKit: cuatro casos no pu
 
 - [x] Resumen financiero: tarjetas y filtro por mes y año (Etapa 3).
 - [x] Gráfica por categoría con datos simulados (Etapa 4).
-- [ ] Registro de movimientos: formulario, validaciones y estado en Pinia.
+- [x] Registro de movimientos: formulario, validaciones y estado en Pinia (Etapa 5).
 - [ ] Historial y filtros: búsqueda, edición y eliminación lógica.
 - [ ] Integración y pruebas: API NestJS, autenticación, autorización y persistencia.
 
@@ -105,3 +105,36 @@ Archivos: composable y componente anteriores, DashboardView, `expensesByCategory
 Los mocks actuales tienen una categoría de gasto por wallet accesible; las pruebas cubren múltiples categorías y porcentajes fraccionarios. Los porcentajes se presentan con hasta un decimal y pueden sumar 99.9 % o 100.1 % por redondeo visual; los importes y el total permanecen exactos en centavos. Una categoría sin metadatos se conserva por ID como «Categoría no disponible», sin perder su importe.
 
 Sin registro, edición, HTTP, cambios de backend ni commits. Firefox y WebKit no se validaron en esta etapa.
+
+## Etapa 5 — Registro de movimientos
+
+**Estado:** validada el 2026-11-14.
+
+- [x] `CreateTransactionInput` separado del registro: no admite identidad, wallet ni auditoría.
+- [x] `TransactionForm.vue` integrado debajo de la gráfica, conservando el layout y componentes existentes.
+- [x] Ingresos y gastos en la wallet seleccionada; creador obtenido del usuario simulado.
+- [x] Categorías filtradas por wallet y tipo; selección limpiada al cambiar cualquiera de ellos.
+- [x] Validaciones en el store: wallet accesible, categoría compatible, importe positivo con máximo dos decimales, fecha de calendario válida y descripción no vacía.
+- [x] Importes como cadenas decimales normalizadas a dos decimales, sin redondear; cálculos mediante centavos enteros. Máximo de 12 dígitos enteros compatible con el contrato Decimal(14,2).
+- [x] ID UUID, createdAt/updatedAt generados y deletedAt/deletedById en null.
+- [x] Fecha inicial local YYYY-MM-DD; timestamps de auditoría ISO independientes de la fecha del movimiento.
+- [x] Mensajes de error y confirmación; limpieza del formulario después del registro.
+- [x] Resumen y gráfica reactivos según wallet y periodo; gastos compartidos completos.
+- [x] ESLint sin correcciones automáticas, type-check y build correctos.
+- [x] 49 pruebas unitarias correctas (29 nuevas), incluidas validaciones, aislamiento entre instancias de Pinia, fechas, identidad y rechazo de acceso ajeno.
+- [x] Cuatro E2E Chromium correctos: dashboard y registro en 1440 y 390 px. Ingresos y gastos en ambas wallets, categorías, importes inválidos, confirmación, totales, gráfica, recarga sin persistencia y ausencia de desbordamiento horizontal. Capturas revisadas.
+
+Archivos creados:
+- `apps/frontend/src/components/TransactionForm.vue`.
+- `apps/frontend/src/utils/date.ts`.
+- `apps/frontend/src/__tests__/transactionRegistration.spec.ts`.
+- `apps/frontend/e2e/transaction-registration.spec.ts`.
+
+Archivos modificados:
+- `apps/frontend/src/types/transaction.ts`: contrato de creación y fechas de auditoría.
+- `apps/frontend/src/stores/transaction.store.ts`: estado reactivo por instancia y addTransaction.
+- `apps/frontend/src/mocks/transactions.ts`: fechas de auditoría de los registros simulados.
+- `apps/frontend/src/views/DashboardView.vue`: integración del formulario.
+- Este roadmap y `docs/docs/ui/dashboard.md`: alcance y validación.
+
+Los registros permanecen únicamente en memoria y se pierden al recargar. La lista temporal existente refleja los registros nuevos; no se implementa un historial nuevo, edición ni eliminación. No hay HTTP, persistencia local, cambios de backend/Prisma, nuevas dependencias ni commits. La autorización frontend es simulada y deberá aplicarse también en el backend futuro. Firefox y WebKit no se validaron en esta etapa.

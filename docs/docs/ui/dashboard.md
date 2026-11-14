@@ -1,7 +1,7 @@
 # Dashboard — PersonalWallet
 
 **Versión:** 1.0  
-**Estado:** Diseño aprobado; layout, datos simulados y resumen mensual implementados
+**Estado:** Diseño aprobado; layout, datos simulados, resumen mensual, gráfica y registro de movimientos implementados
 **Tecnología:** Vue 3 + TypeScript + Tailwind CSS
 
 ## Objetivo
@@ -121,3 +121,17 @@ useExpensesByCategory recibe el mismo periodo filtrado del resumen financiero. S
 Los porcentajes se calculan sobre el total y se muestran con hasta un decimal; el redondeo de presentación puede producir una suma distinta de 100 %. Los colores permanecen estables al cambiar de periodo. Se mantiene el fallback «Categoría no disponible» para metadatos ausentes, conservando el ID y el importe.
 
 Validación: ESLint, type-check, build, 20 pruebas unitarias y dos E2E Chromium (escritorio y móvil) correctos. Se verifican cambios de wallet/mes/año, canvas real, estado vacío, separación de espacios y ausencia de desbordamiento horizontal. La referencia enlazada es un archivo Figma Make; la adaptación visual utiliza la captura local documentada. No se implementan formularios, edición ni conexión con el backend.
+
+## Etapa 5: registro de movimientos
+
+TransactionForm incorpora el registro rápido debajo de la gráfica sin reemplazar el layout existente. Permite elegir ingreso o gasto, importe MXN, categoría, fecha y descripción. La wallet proviene del selector actual y el creador del usuario simulado; no existe selector de persona. Las categorías corresponden exclusivamente a la wallet y al tipo actuales, y su selección se limpia al cambiar ese contexto.
+
+addTransaction valida el acceso a la wallet, la compatibilidad de categoría/tipo, el importe positivo (máximo dos decimales y 12 dígitos enteros), una fecha de calendario válida y una descripción no vacía. El importe permanece como cadena decimal normalizada a dos decimales; los composables existentes calculan con centavos enteros. Se genera UUID y auditoría de creación/actualización; deletedAt y deletedById comienzan en null.
+
+La fecha inicial y la fecha del movimiento usan calendario local YYYY-MM-DD, sin conversión UTC. Los timestamps ISO de auditoría representan instantes y se mantienen separados de esa fecha. El formulario presenta errores sin borrar los datos y una confirmación tras guardar; después limpia importe, categoría y descripción y restablece la fecha local actual.
+
+Las tarjetas, la gráfica y la lista temporal existente reaccionan al registro según la wallet y el periodo seleccionados. Registrar en otro mes no cambia el periodo visible; la confirmación recuerda que el resumen y la gráfica corresponden al periodo seleccionado. Los gastos compartidos se suman completos.
+
+Validación: ESLint, type-check, build y 49 pruebas unitarias correctos; cuatro E2E Chromium correctos en escritorio y móvil (1440 y 390 px), con capturas revisadas y sin desbordamiento horizontal. Se cubren ingresos y gastos en ambas wallets, categorías, errores, identidad automática, acceso ajeno, fechas, totales, gráfica y ausencia de persistencia tras recargar. Firefox y WebKit no se validaron.
+
+Los datos permanecen en Pinia durante la sesión, sin HTTP ni persistencia local. Historial nuevo, edición, eliminación y autorización real del backend continúan pendientes. El diseño de Figma no se modificó.
