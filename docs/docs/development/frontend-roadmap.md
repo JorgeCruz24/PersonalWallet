@@ -36,7 +36,7 @@ La ejecución E2E general también intentó Firefox y WebKit: cuatro casos no pu
 ## Siguientes etapas
 
 - [x] Resumen financiero: tarjetas y filtro por mes y año (Etapa 3).
-- [ ] Gráfica por categoría con datos simulados.
+- [x] Gráfica por categoría con datos simulados (Etapa 4).
 - [ ] Registro de movimientos: formulario, validaciones y estado en Pinia.
 - [ ] Historial y filtros: búsqueda, edición y eliminación lógica.
 - [ ] Integración y pruebas: API NestJS, autenticación, autorización y persistencia.
@@ -87,3 +87,21 @@ Archivos modificados:
 - docs/docs/ui/dashboard.md y este roadmap: alcance y resultados de la etapa.
 
 No se agregaron dependencias. Gráficas, formularios, HTTP, persistencia y autenticación real permanecen pendientes.
+
+## Etapa 4 — Gastos por categoría
+
+**Estado:** validada el 2026-11-14.
+
+- [x] `useExpensesByCategory.ts`: agrupa gastos activos por `categoryId`, suma centavos enteros seguros y calcula porcentajes sobre el total.
+- [x] `ExpenseDonutChart.vue`: Chart.js y vue-chartjs, total al centro, colores estables por ID, leyenda accesible, porcentajes e importes MXN y tooltips.
+- [x] Integración en `DashboardView.vue` con los mismos movimientos filtrados del resumen; sin nuevos filtros ni HTTP.
+- [x] Estado vacío sin canvas cuando no hay gastos, incluso en periodos con ingresos.
+- [x] Gastos compartidos completos; exclusión de eliminados y separación de wallets.
+- [x] ESLint sin correcciones automáticas, type-check, build y 20 pruebas unitarias correctos.
+- [x] Dos E2E Chromium (1440 y 390 px): renderizado real del canvas, wallet, mes, año, estado vacío, importes, ausencia de errores JavaScript y desbordamiento horizontal.
+
+Archivos: composable y componente anteriores, DashboardView, `expensesByCategory.spec.ts`, adaptación de las pruebas App/financialSummary con sustituto de canvas para JSDOM y ampliación de `e2e/vue.spec.ts`. Se declararon las dependencias de desarrollo ya utilizadas por `eslint.config.js`, ausentes en package.json. Chart.js y vue-chartjs ya estaban instalados al comenzar.
+
+Los mocks actuales tienen una categoría de gasto por wallet accesible; las pruebas cubren múltiples categorías y porcentajes fraccionarios. Los porcentajes se presentan con hasta un decimal y pueden sumar 99.9 % o 100.1 % por redondeo visual; los importes y el total permanecen exactos en centavos. Una categoría sin metadatos se conserva por ID como «Categoría no disponible», sin perder su importe.
+
+Sin registro, edición, HTTP, cambios de backend ni commits. Firefox y WebKit no se validaron en esta etapa.

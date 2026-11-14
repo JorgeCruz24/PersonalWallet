@@ -12,7 +12,7 @@ Permitir que los dos usuarios autorizados consulten sus ingresos, gastos y balan
 
 - Herramienta: Figma
 - Estado: Diseño aprobado
-- Archivo: [PersonalWallet — Dashboard](URL_DE_FIGMA)
+- Archivo: [PersonalWallet — Dashboard]([URL_DE_FIGMA](https://www.figma.com/make/HP1IpXT0Lh64VTupMvSQ07/Control-de-Finanzas-en-Pareja?t=fiioWEqvJdFvQsOh-1))
 - Captura: ./images/image.png
 
 ## Componentes principales
@@ -111,3 +111,13 @@ El periodo inicia en el mes actual del dispositivo y se mantiene al cambiar de w
 Validación: ESLint, type-check, build y 13 pruebas unitarias correctos; dos E2E Chromium (escritorio y móvil) correctos, con revisión de capturas y sin desbordamiento horizontal. Totales de ambas wallets y cambios de mes/año cubiertos por pruebas. Véase el [roadmap](../development/frontend-roadmap.md#etapa-3--resumen-financiero) para archivos y totales.
 
 Las descripciones de etapas anteriores se conservan como historial. Las tarjetas y controles de periodo ya están implementados; gráficas, presupuesto, metas, formularios, edición y autenticación real siguen pendientes.
+
+## Etapa 4: gráfica de gastos por categoría
+
+Se agrega ExpenseDonutChart debajo del resumen, conservando el layout y los controles de wallet, mes y año. La dona muestra total al centro, leyenda con colores por ID, porcentajes y montos MXN; en móvil la leyenda se coloca debajo. Los tooltips incluyen nombre, importe y porcentaje. La leyenda ofrece el mismo detalle en texto accesible.
+
+useExpensesByCategory recibe el mismo periodo filtrado del resumen financiero. Solo suma EXPENSE activos, agrupa por categoryId y conserva centavos enteros; los gastos compartidos se consideran completos. El total coincide con la tarjeta de gastos. Si no hay gastos se muestra «No hay gastos activos en este periodo para esta wallet», sin dibujar un canvas vacío.
+
+Los porcentajes se calculan sobre el total y se muestran con hasta un decimal; el redondeo de presentación puede producir una suma distinta de 100 %. Los colores permanecen estables al cambiar de periodo. Se mantiene el fallback «Categoría no disponible» para metadatos ausentes, conservando el ID y el importe.
+
+Validación: ESLint, type-check, build, 20 pruebas unitarias y dos E2E Chromium (escritorio y móvil) correctos. Se verifican cambios de wallet/mes/año, canvas real, estado vacío, separación de espacios y ausencia de desbordamiento horizontal. La referencia enlazada es un archivo Figma Make; la adaptación visual utiliza la captura local documentada. No se implementan formularios, edición ni conexión con el backend.

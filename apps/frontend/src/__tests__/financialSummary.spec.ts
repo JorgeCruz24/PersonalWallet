@@ -6,6 +6,8 @@ import { useWalletStore } from '@/stores/wallet.store'
 import { decimalToCents, formatMoney } from '@/utils/money'
 import DashboardView from '@/views/DashboardView.vue'
 
+vi.mock('vue-chartjs', () => ({ Doughnut: { template: '<canvas />', props: ['data', 'options'] } }))
+
 beforeEach(() => {
   setActivePinia(createPinia())
   vi.useFakeTimers({ toFake: ['Date'] })

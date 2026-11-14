@@ -6,12 +6,15 @@ import { useWalletStore } from '@/stores/wallet.store'
 import { useFinancialSummary } from '@/composables/useFinancialSummary'
 import { decimalToCents, formatMoney } from '@/utils/money'
 import SummaryCard from '@/components/SummaryCard.vue'
+import ExpenseDonutChart from '@/components/ExpenseDonutChart.vue'
+import { useExpensesByCategory } from '@/composables/useExpensesByCategory'
 import { demoUser } from '@/mocks/wallets'
 import WalletSelector from '@/components/layout/WalletSelector.vue'
 import LayoutIcon from '@/components/layout/LayoutIcon.vue'
 
 const { selectedWallet } = storeToRefs(useWalletStore())
 const { selectedMonth, selectedYear, periodTransactions: transactions, summary } = useFinancialSummary()
+const { categories, total } = useExpensesByCategory(transactions)
 const months = Array.from({ length: 12 }, (_, index) =>
   new Intl.DateTimeFormat('es-MX', { month: 'long', timeZone: 'UTC' }).format(new Date(Date.UTC(2026, index, 1))),
 )
@@ -79,6 +82,7 @@ const dateFormatter = new Intl.DateTimeFormat('es-MX', { dateStyle: 'medium', ti
         <SummaryCard title="Balance" :cents="summary.balance" variant="balance" />
       </div>
     </section>
+    <ExpenseDonutChart :categories="categories" :total="total" />
     <section class="workspace-panel mt-7" aria-labelledby="transactions-heading">
       <h3 id="transactions-heading" class="text-lg font-semibold">Movimientos de demostración</h3>
       <p class="mt-2 text-xs leading-6 text-[var(--color-muted)]">Lista temporal de {{ selectedWallet.name }} · {{ months[selectedMonth - 1] }} {{ selectedYear }} · MXN</p>

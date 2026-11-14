@@ -5,6 +5,8 @@ import App from '../App.vue'
 import router from '../router'
 import { useWalletStore } from '../stores/wallet.store'
 
+vi.mock('vue-chartjs', () => ({ Doughnut: { template: '<canvas />', props: ['data', 'options'] } }))
+
 beforeEach(() => {
   vi.useFakeTimers({ toFake: ['Date'] })
   vi.setSystemTime(new Date(2026, 10, 14))
