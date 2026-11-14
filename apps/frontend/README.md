@@ -1,67 +1,43 @@
-# frontend
+# Frontend de PersonalWallet
 
-This template should help get you started developing with Vue 3 in Vite.
+Vue 3 + TypeScript + Vite, Tailwind CSS 4, Vue Router y Pinia.
 
-## Recommended IDE Setup
+## Estado actual
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+Primera etapa: layout responsive, encabezado, navegación a `/dashboard` y selector de wallet personal o compartida con Pinia. La raíz y las rutas desconocidas redirigen al dashboard.
 
-## Recommended Browser Setup
+La sesión y las dos wallets disponibles son ficticias. La selección permanece en memoria y se restablece a «Mis finanzas» al recargar. No se incluyen datos de la wallet personal del otro usuario.
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+Pendientes: autenticación real, backend, llamadas HTTP, balances, formularios, gráficas e historial. Este prototipo no implementa control de acceso.
 
-## Type Support for `.vue` Imports in TS
+## Desarrollo local
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
+Desde `apps/frontend`, con Node.js `^22.18.0 || >=24.12.0`:
 
 ```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
+npm ci
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+Abrir la URL local que muestre Vite y navegar a `/dashboard`.
+
+## Validaciones
 
 ```sh
+npx eslint .
+npm run type-check
 npm run build
-```
-
-### Run Unit Tests with [Vitest](https://vitest.dev/)
-
-```sh
-npm run test:unit
-```
-
-### Run End-to-End Tests with [Playwright](https://playwright.dev)
-
-```sh
-# Install browsers for the first run
-npx playwright install
-
-# When testing on CI, must build the project first
-npm run build
-
-# Runs the end-to-end tests
-npm run test:e2e
-# Runs the tests only on Chromium
+npm run test:unit -- --run
+npx playwright install chromium
 npm run test:e2e -- --project=chromium
-# Runs the tests of a specific file
-npm run test:e2e -- tests/example.spec.ts
-# Runs the tests in debug mode
-npm run test:e2e -- --debug
 ```
+
+Las pruebas E2E verifican navegación, recarga, selección de wallet y ausencia de desbordamiento horizontal a 1440 y 390 píxeles. Para ejecutarlas sin ventana en PowerShell, después del build:
+
+```powershell
+$env:CI = '1'
+npm run test:e2e -- --project=chromium
+Remove-Item Env:CI
+```
+
+Consultar la [especificación del dashboard](../../docs/docs/ui/dashboard.md) y el [roadmap](../../docs/docs/development/frontend-roadmap.md).

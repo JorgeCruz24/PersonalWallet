@@ -1,8 +1,18 @@
 import { test, expect } from '@playwright/test'
 
-// See here how to get started:
-// https://playwright.dev/docs/intro
-test('visits the app root url', async ({ page }) => {
-  await page.goto('/')
-  await expect(page.locator('h1')).toHaveText('You did it!')
-})
+for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 }]) {
+  test(`dashboard y selector a ${viewport.width}px`, async ({ page }) => {
+    await page.setViewportSize(viewport)
+    await page.goto('/')
+    await expect(page).toHaveURL(/\/dashboard$/)
+    await expect(page.getByRole('heading', { name: 'Resumen mensual' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Mis finanzas', exact: true })).toBeVisible()
+    await page.getByLabel('Compartidas', { exact: true }).check()
+    await expect(page.getByRole('heading', { name: 'Compartidas', exact: true })).toBeVisible()
+    await page.getByLabel('Mis finanzas', { exact: true }).check()
+    await expect(page.getByRole('heading', { name: 'Mis finanzas', exact: true })).toBeVisible()
+    await page.reload()
+    await expect(page.getByRole('heading', { name: 'Resumen mensual' })).toBeVisible()
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
+  })
+}

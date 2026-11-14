@@ -26,4 +26,3 @@ Usar un único repositorio Git privado con `apps/frontend`, `apps/backend`, `doc
 
 ## Revisión de la decisión
 Revisar si aparecen múltiples equipos, ciclos de publicación incompatibles o librerías compartidas que justifiquen cambiar la organización.
-

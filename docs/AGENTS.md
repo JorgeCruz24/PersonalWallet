@@ -79,3 +79,44 @@ Instrucciones para agentes de IA que trabajen en este repositorio. PersonalWalle
 - `docs/development/setup.md`: instalación y ejecución local.
 
 Si una instrucción entra en conflicto con la seguridad o privacidad del proyecto, detenerse y solicitar aclaración.
+
+## UI development and documentation
+
+- Antes de implementar una pantalla, consultar su especificación en `docs/ui/`.
+- Utilizar las imágenes de `docs/ui/images/` como referencia visual.
+- Mantener los componentes Vue pequeños, reutilizables y tipados.
+- No considerar una funcionalidad terminada únicamente porque su interfaz está diseñada.
+- Actualizar `docs/development/frontend-roadmap.md` al completar una fase.
+- Si cambia el diseño aprobado, actualizar la especificación y la imagen de referencia cuando corresponda.
+- No modificar decisiones arquitectónicas aceptadas sin revisar los ADR relevantes.
+
+
+# Instrucciones para la documentación
+
+## Reglas generales
+
+- Redacta la documentación en español.
+- Utiliza el formato Markdown.
+- Mantén la documentación clara y concisa.
+- No documentes funcionalidades planificadas como si ya estuvieran implementadas.
+
+## Documentación de la interfaz de usuario (UI)
+
+- Almacena las especificaciones de la interfaz de usuario en `docs/ui/`.
+- Almacena las imágenes de diseño en `docs/ui/images/`.
+- Haz referencia a las imágenes mediante rutas relativas.
+- Incluye los requisitos funcionales y los criterios de aceptación.
+- Actualiza las especificaciones de la interfaz de usuario cuando cambien los diseños.
+
+## Documentación de decisiones arquitectónicas (ADR)
+
+- Almacena las decisiones arquitectónicas en `docs/adr/`.
+- Sigue el formato ADR existente.
+- No sobrescribas las decisiones arquitectónicas ya aceptadas.
+- Crea un nuevo ADR cuando sustituyas una decisión previamente aceptada.
+
+## Seguimiento del desarrollo
+
+- Actualiza las hojas de ruta (roadmaps) de desarrollo a medida que se completen los hitos.
+- Registra las tareas pendientes y las limitaciones conocidas.
+- Asegúrate de que la documentación sea coherente con el código real.
