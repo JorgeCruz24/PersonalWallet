@@ -90,3 +90,13 @@ La referencia se interpretó visualmente desde una captura, sin medidas, tokens,
 Las tarjetas, gráfica, presupuesto, meta de ahorro, formulario, controles de mes y acciones flotantes de la captura quedan pendientes. El área central muestra el contexto de la wallet y un aviso de futuras funciones. No se implementa el selector de persona del formulario, excluido por los requisitos de v1.
 
 Validación: ESLint, type-check y build correctos; una prueba unitaria y dos E2E en Chromium (1440 × 900 y 390 × 844) correctas. Se inspeccionaron las capturas generadas para comparar el layout con la referencia y se verificó la ausencia de desbordamiento horizontal. Las capturas se generan en test-results y no se versionan.
+
+## Etapa 2: datos y estado
+
+Se reutilizan el selector y el layout de la etapa 1. Pinia deriva las wallets accesibles de las membresías del usuario simulado (Jorge): su wallet personal y la compartida. La wallet personal de Ana existe en los mocks, pero se rechaza al intentar seleccionarla.
+
+DashboardView incorpora una lista temporal de movimientos activos de la wallet elegida, con ingresos y gastos de varios meses, fechas e importes en MXN. Los movimientos con deletedAt definido quedan excluidos. Se conserva el diseño anterior; no se implementan tarjetas, gráficas, formulario, filtros mensuales ni acciones de edición.
+
+Los datos y la selección permanecen en memoria, sin HTTP ni persistencia local. La autenticación y autorización reales siguen pendientes del backend. Para los contratos frontend se utilizan cadenas decimales en los importes.
+
+Validación: ESLint, type-check, build y siete pruebas unitarias correctos; dos E2E en Chromium correctos (escritorio y móvil). Firefox y WebKit no pudieron ejecutarse por falta de sus navegadores instalados.

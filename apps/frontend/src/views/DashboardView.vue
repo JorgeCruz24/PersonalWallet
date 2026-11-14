@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { useWalletStore } from '@/stores/wallet.store'
+import { useTransactionStore } from '@/stores/transaction.store'
 import { demoUser } from '@/mocks/wallets'
 import WalletSelector from '@/components/layout/WalletSelector.vue'
 import LayoutIcon from '@/components/layout/LayoutIcon.vue'
 
 const { selectedWallet } = storeToRefs(useWalletStore())
+const { transactions } = storeToRefs(useTransactionStore())
+const currencyFormatter = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' })
+const dateFormatter = new Intl.DateTimeFormat('es-MX', { dateStyle: 'medium', timeZone: 'UTC' })
 </script>
 
 <template>
@@ -40,6 +44,25 @@ const { selectedWallet } = storeToRefs(useWalletStore())
         <p class="text-xs font-semibold">Tu resumen financiero, próximamente</p>
         <p class="mt-2 max-w-lg text-xs leading-6 text-[var(--color-muted)]">Aquí podrás consultar tus balances, explorar gastos por categoría y registrar movimientos.</p>
       </div>
+    </section>
+    <section class="workspace-panel mt-7" aria-labelledby="transactions-heading">
+      <h3 id="transactions-heading" class="text-lg font-semibold">Movimientos de demostración</h3>
+      <p class="mt-2 text-xs leading-6 text-[var(--color-muted)]">Lista temporal de {{ selectedWallet.name }} · Todos los meses · MXN</p>
+      <ul v-if="transactions.length" class="mt-4 divide-y divide-[var(--color-line)]" data-testid="transactions">
+        <li v-for="transaction in transactions" :key="transaction.id" class="flex flex-wrap items-center justify-between gap-3 py-4">
+          <div class="min-w-0">
+            <p class="break-words text-sm font-medium">{{ transaction.description }}</p>
+            <p class="mt-1 text-xs text-[var(--color-muted)]">
+              <time :datetime="transaction.date">{{ dateFormatter.format(new Date(transaction.date)) }}</time>
+              · {{ transaction.type === 'INCOME' ? 'Ingreso' : 'Gasto' }}
+            </p>
+          </div>
+          <span class="shrink-0 text-sm font-semibold tabular-nums">
+            {{ transaction.type === 'INCOME' ? '+' : '−' }}{{ currencyFormatter.format(Number(transaction.amount)) }}
+          </span>
+        </li>
+      </ul>
+      <p v-else class="mt-4 text-sm text-[var(--color-muted)]">No hay movimientos activos en este espacio.</p>
     </section>
     <p class="mt-4 text-[11px] leading-5 text-[var(--color-muted)]">Vista de demostración · Wallets y usuarios simulados · MXN</p>
   </section>
