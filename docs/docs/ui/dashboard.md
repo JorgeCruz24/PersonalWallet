@@ -8,11 +8,12 @@
 
 Permitir que los dos usuarios autorizados consulten sus ingresos, gastos y balance mensual, administrando por separado sus finanzas personales y compartidas.
 
-## Referencia visual
+## Diseño de referencia
 
-![Dashboard PersonalWallet v1](./images/image.png)
-
-La imagen representa el diseño objetivo. Los importes son datos simulados y no corresponden a información financiera real.
+- Herramienta: Figma
+- Estado: Diseño aprobado
+- Archivo: [PersonalWallet — Dashboard](URL_DE_FIGMA)
+- Captura: ./images/image.png
 
 ## Componentes principales
 
@@ -71,3 +72,21 @@ La primera versión del frontend utilizará datos simulados y Pinia. Posteriorme
 ## Avance de implementación
 
 La primera etapa incorpora MainLayout, AppHeader, WalletSelector y DashboardView, con navegación a /dashboard y wallets simuladas en Pinia. El resumen financiero, el formulario, las gráficas, el historial y la autenticación siguen pendientes. El selector cambia el contexto visible; todavía no existen consultas ni movimientos que actualizar.
+
+
+## Adaptación visual desde captura
+
+El layout y la navegación se adaptaron a la captura compartida por el usuario de la [propuesta de Figma](https://www.figma.com/make/HP1IpXT0Lh64VTupMvSQ07/Control-de-Finanzas-en-Pareja).
+
+- Encabezado superior de 65 px, barra lateral clara de 227 px en escritorio, opción activa verde, avatares simulados de Jorge y Ana y fondo con degradados suaves.
+- Saludo contextual: «Hola, Jorge» en finanzas personales y «Hola, equipo» en compartidas.
+- Selector de wallet conservado como requisito funcional, aunque no se muestra en la captura. La selección sigue en memoria con Pinia y comienza en «Mis finanzas».
+- En móvil, el menú se desplaza horizontalmente y el selector se coloca debajo del saludo.
+
+### Diferencias y límites de esta etapa
+
+La referencia se interpretó visualmente desde una captura, sin medidas, tokens, fuentes ni assets exportados de Figma. Se utiliza la fuente local disponible (Inter, Segoe UI o Arial) y una colección pequeña de iconos SVG aproximados en LayoutIcon; no se garantiza coincidencia exacta de tipografía ni iconografía.
+
+Las tarjetas, gráfica, presupuesto, meta de ahorro, formulario, controles de mes y acciones flotantes de la captura quedan pendientes. El área central muestra el contexto de la wallet y un aviso de futuras funciones. No se implementa el selector de persona del formulario, excluido por los requisitos de v1.
+
+Validación: ESLint, type-check y build correctos; una prueba unitaria y dos E2E en Chromium (1440 × 900 y 390 × 844) correctas. Se inspeccionaron las capturas generadas para comparar el layout con la referencia y se verificó la ausencia de desbordamiento horizontal. Las capturas se generan en test-results y no se versionan.

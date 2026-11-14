@@ -6,3 +6,5 @@ export const demoWallets: readonly Wallet[] = [
   { id: 'personal-demo', name: 'Mis finanzas', type: 'PERSONAL' },
   { id: 'shared-demo', name: 'Compartidas', type: 'SHARED' },
 ]
+
+export const demoPartner = { name: 'Ana', initials: 'A' } as const

@@ -1,35 +1,44 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import AppHeader from '@/components/layout/AppHeader.vue'
-import WalletSelector from '@/components/layout/WalletSelector.vue'
-import { demoUser } from '@/mocks/wallets'
+import LayoutIcon, { type LayoutIconName } from '@/components/layout/LayoutIcon.vue'
+import { demoUser, demoPartner } from '@/mocks/wallets'
+
+const upcoming: { label: string; icon: LayoutIconName }[] = [
+  { label: 'Movimientos', icon: 'transactions' },
+  { label: 'Categorías', icon: 'categories' },
+  { label: 'Reportes', icon: 'reports' },
+  { label: 'Configuración', icon: 'settings' },
+]
 </script>
 
 <template>
-  <a href="#main-content" class="sr-only z-50 rounded bg-white p-3 text-emerald-900 focus:not-sr-only focus:fixed focus:left-4 focus:top-4">Saltar al contenido</a>
-  <div class="min-h-dvh bg-slate-50 md:flex">
-    <aside class="flex flex-col bg-emerald-950 text-white md:fixed md:inset-y-0 md:w-60">
-      <RouterLink to="/dashboard" class="flex items-center gap-3 border-b border-white/10 px-6 py-6 text-lg font-bold tracking-tight">
-        <svg class="size-8 text-emerald-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M20 7H5a2 2 0 0 1 0-4h13v4M4 7v12a2 2 0 0 0 2 2h14V7M16 12h4v5h-4a2.5 2.5 0 0 1 0-5Z" /></svg>
-        PersonalWallet
-      </RouterLink>
-      <nav aria-label="Navegación principal" class="flex gap-2 overflow-x-auto p-3 md:flex-col md:p-4">
-        <RouterLink to="/dashboard" class="rounded-xl bg-emerald-700 px-4 py-3 text-sm font-semibold shadow-sm" active-class="ring-1 ring-white/15">Dashboard</RouterLink>
-        <span v-for="label in ['Movimientos', 'Categorías', 'Reportes', 'Configuración']" :key="label" aria-disabled="true" class="flex items-center justify-between gap-4 rounded-xl px-4 py-3 text-sm text-emerald-100/60">
-          {{ label }} <span class="text-[10px] uppercase tracking-wide">Próximamente</span>
+  <a href="#main-content" class="skip-link">Saltar al contenido</a>
+  <div class="app-shell">
+    <AppHeader :user-name="demoUser.name" :initials="demoUser.initials" :partner-name="demoPartner.name" :partner-initials="demoPartner.initials" />
+    <aside class="app-sidebar">
+      <div class="hidden px-3 pb-5 pt-1 md:block">
+        <p class="text-[13px] font-semibold">Menú principal</p>
+        <p class="mt-1 text-[11px] text-[var(--color-muted)]">Personal y compartido</p>
+      </div>
+      <nav aria-label="Navegación principal" class="flex gap-1 overflow-x-auto md:flex-col md:gap-1.5">
+        <RouterLink to="/dashboard" class="nav-item nav-item-active" active-class="is-active">
+          <LayoutIcon name="dashboard" class="size-5 shrink-0" />
+          Dashboard
+        </RouterLink>
+        <span v-for="item in upcoming" :key="item.label" aria-disabled="true" :title="`${item.label}: próximamente`" class="nav-item cursor-default">
+          <LayoutIcon :name="item.icon" class="size-5 shrink-0" />
+          {{ item.label }}
+          <span class="sr-only">Próximamente</span>
         </span>
       </nav>
-      <div class="mt-auto hidden border-t border-white/10 px-6 py-5 md:block">
-        <p class="text-sm font-medium">{{ demoUser.name }}</p>
-        <p class="mt-1 text-xs text-emerald-100/60">Sesión simulada · MXN</p>
+      <div class="mt-auto hidden rounded-2xl border border-[var(--color-line)] bg-white/50 p-4 md:block">
+        <p class="text-xs font-semibold text-[var(--color-accent)]">PersonalWallet</p>
+        <p class="mt-1 text-[11px] leading-5 text-[var(--color-muted)]">Espacios separados.<br />Moneda única: MXN.</p>
       </div>
     </aside>
-    <div class="min-w-0 flex-1 md:ml-60">
-      <AppHeader :user-name="demoUser.name" :initials="demoUser.initials" />
-      <main id="main-content" class="mx-auto max-w-7xl px-5 py-6 sm:px-8 sm:py-8" tabindex="-1">
-        <WalletSelector />
-        <RouterView />
-      </main>
-    </div>
+    <main id="main-content" class="dashboard-main" tabindex="-1">
+      <RouterView />
+    </main>
   </div>
 </template>

@@ -22,3 +22,11 @@ La selección es temporal y se restablece al recargar. Las opciones de navegaci�
 - [ ] Integración y pruebas: API NestJS, autenticación, autorización y persistencia.
 
 Referencia: [diseño y criterios del dashboard](../ui/dashboard.md).
+
+## Ajuste visual de la etapa 1
+
+- [x] Layout y navegación adaptados a la captura de Figma facilitada por el usuario.
+- [x] Revisión de capturas de escritorio y móvil; selector y navegación validados con Chromium.
+- [x] ESLint, type-check, build y pruebas unitarias correctos tras la adaptación.
+
+Diferencias y limitaciones documentadas en la especificación del dashboard. El contenido financiero continúa pendiente.

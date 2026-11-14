@@ -1,19 +1,23 @@
 <script setup lang="ts">
-defineProps<{ userName: string; initials: string }>()
+import LayoutIcon from './LayoutIcon.vue'
+defineProps<{ userName: string; initials: string; partnerName: string; partnerInitials: string }>()
 </script>
 
 <template>
-  <header class="flex items-center justify-between gap-4 border-b border-slate-200 bg-white px-5 py-5 sm:px-8">
-    <div>
-      <p class="text-xs font-semibold uppercase tracking-widest text-emerald-700">Tu espacio financiero</p>
-      <h1 class="mt-1 text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">Resumen mensual</h1>
+  <header class="app-header">
+    <div class="flex min-w-0 items-center gap-3">
+      <RouterLink to="/dashboard" aria-label="PersonalWallet — inicio" class="brand-mark">
+        <LayoutIcon name="wallet" class="size-6" />
+      </RouterLink>
+      <h1 class="truncate text-lg font-bold tracking-tight sm:text-[23px]">Resumen mensual</h1>
+      <span class="ml-2 hidden border-l border-[var(--color-line)] pl-5 text-[13px] text-[var(--color-muted)] lg:block">Finanzas en pareja</span>
     </div>
-    <div class="flex shrink-0 items-center gap-3" aria-label="Usuario de demostración">
-      <span class="flex size-10 items-center justify-center rounded-full bg-emerald-100 font-semibold text-emerald-800" aria-hidden="true">{{ initials }}</span>
-      <div class="hidden sm:block">
-        <p class="text-sm font-semibold text-slate-900">{{ userName }}</p>
-        <p class="text-xs text-slate-500">Cuenta de demostración</p>
+    <div class="flex shrink-0 items-center gap-3" :aria-label="`Usuarios de demostración: ${userName} y ${partnerName}`">
+      <div class="flex -space-x-1.5" aria-hidden="true">
+        <span class="avatar bg-emerald-100 text-emerald-700">{{ initials }}</span>
+        <span class="avatar bg-purple-100 text-purple-700">{{ partnerInitials }}</span>
       </div>
+      <span class="hidden text-xs font-semibold text-[var(--color-muted)] sm:block">{{ userName }} &amp; {{ partnerName }}</span>
     </div>
   </header>
 </template>

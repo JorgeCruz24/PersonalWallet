@@ -14,12 +14,12 @@ describe('Layout y navegación', () => {
     await flushPromises()
 
     expect(router.currentRoute.value.path).toBe('/dashboard')
-    expect(wrapper.get('h2').text()).toBe('Mis finanzas')
+    expect(wrapper.get('#wallet-heading').text()).toBe('Mis finanzas')
     await wrapper.get('input[value="shared-demo"]').setValue()
-    expect(wrapper.get('h2').text()).toBe('Compartidas')
+    expect(wrapper.get('#wallet-heading').text()).toBe('Compartidas')
     expect(wrapper.get('[role="status"]').text()).toContain('sin reparto automático')
     await wrapper.get('input[value="personal-demo"]').setValue()
-    expect(wrapper.get('h2').text()).toBe('Mis finanzas')
+    expect(wrapper.get('#wallet-heading').text()).toBe('Mis finanzas')
 
     const store = useWalletStore(pinia)
     store.selectWallet('personal-ajena')
