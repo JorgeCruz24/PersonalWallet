@@ -1,9 +1,15 @@
-import { describe, it, expect } from 'vitest'
+import { afterEach, beforeEach, describe, it, expect, vi } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
 import { createPinia } from 'pinia'
 import App from '../App.vue'
 import router from '../router'
 import { useWalletStore } from '../stores/wallet.store'
+
+beforeEach(() => {
+  vi.useFakeTimers({ toFake: ['Date'] })
+  vi.setSystemTime(new Date(2026, 10, 14))
+})
+afterEach(() => vi.useRealTimers())
 
 describe('Layout y navegación', () => {
   it('redirige al dashboard y cambia de wallet sin mezclar espacios', async () => {

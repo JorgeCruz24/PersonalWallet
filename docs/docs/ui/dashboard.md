@@ -1,7 +1,7 @@
 # Dashboard — PersonalWallet
 
 **Versión:** 1.0  
-**Estado:** Diseño aprobado, pendiente de implementación  
+**Estado:** Diseño aprobado; layout, datos simulados y resumen mensual implementados
 **Tecnología:** Vue 3 + TypeScript + Tailwind CSS
 
 ## Objetivo
@@ -100,3 +100,14 @@ DashboardView incorpora una lista temporal de movimientos activos de la wallet e
 Los datos y la selección permanecen en memoria, sin HTTP ni persistencia local. La autenticación y autorización reales siguen pendientes del backend. Para los contratos frontend se utilizan cadenas decimales en los importes.
 
 Validación: ESLint, type-check, build y siete pruebas unitarias correctos; dos E2E en Chromium correctos (escritorio y móvil). Firefox y WebKit no pudieron ejecutarse por falta de sus navegadores instalados.
+## Etapa 3: resumen financiero
+
+SummaryCard muestra ingresos, gastos y balance en MXN según la wallet, el mes y el año seleccionados. Conserva la paleta verde/rojo/violeta y los bordes redondeados de la referencia; las tarjetas se apilan en móvil. Los selectores tienen etiquetas accesibles y las tarjetas anuncian sus cambios mediante aria-live.
+
+useFinancialSummary deriva los resultados de Pinia sin HTTP. Los importes se convierten desde cadenas decimales a centavos enteros antes de sumar; el balance es ingresos menos gastos del periodo, sin arrastre de meses previos. Se excluyen movimientos con deletedAt y otras wallets. Los gastos compartidos se cuentan completos, independientemente del creador.
+
+El periodo inicia en el mes actual del dispositivo y se mantiene al cambiar de wallet. Se filtran también los movimientos de demostración; los periodos vacíos muestran ceros y un mensaje claro. La comparación de fechas YYYY-MM-DD no convierte zonas horarias.
+
+Validación: ESLint, type-check, build y 13 pruebas unitarias correctos; dos E2E Chromium (escritorio y móvil) correctos, con revisión de capturas y sin desbordamiento horizontal. Totales de ambas wallets y cambios de mes/año cubiertos por pruebas. Véase el [roadmap](../development/frontend-roadmap.md#etapa-3--resumen-financiero) para archivos y totales.
+
+Las descripciones de etapas anteriores se conservan como historial. Las tarjetas y controles de periodo ya están implementados; gráficas, presupuesto, metas, formularios, edición y autenticación real siguen pendientes.

@@ -35,7 +35,8 @@ La ejecución E2E general también intentó Firefox y WebKit: cuatro casos no pu
 
 ## Siguientes etapas
 
-- [ ] Resumen financiero: tarjetas y gráfica por categoría con datos simulados.
+- [x] Resumen financiero: tarjetas y filtro por mes y año (Etapa 3).
+- [ ] Gráfica por categoría con datos simulados.
 - [ ] Registro de movimientos: formulario, validaciones y estado en Pinia.
 - [ ] Historial y filtros: búsqueda, edición y eliminación lógica.
 - [ ] Integración y pruebas: API NestJS, autenticación, autorización y persistencia.
@@ -49,3 +50,40 @@ Referencia: [diseño y criterios del dashboard](../ui/dashboard.md).
 - [x] ESLint, type-check, build y pruebas unitarias correctos tras la adaptación.
 
 Diferencias y limitaciones documentadas en la especificación del dashboard. El resumen financiero continúa pendiente; la etapa 2 agrega una lista temporal de movimientos.
+
+## Etapa 3 — Resumen financiero
+
+**Estado:** validada el 2026-11-14.
+
+- [x] Conversión de cadenas decimales a centavos enteros y formato MXN.
+- [x] Composable reactivo conectado a los stores existentes.
+- [x] Tarjetas reutilizables de ingresos, gastos y balance del periodo.
+- [x] Selección de mes y año, conservada al cambiar de wallet.
+- [x] Exclusión de movimientos eliminados y de otras wallets; gastos compartidos completos.
+- [x] Lista temporal filtrada por el mismo periodo y mensaje para periodos vacíos.
+- [x] ESLint sin correcciones automáticas, type-check, build y 13 pruebas unitarias correctos.
+- [x] Dos E2E en Chromium (1440 y 390 px), revisión de capturas y ausencia de desbordamiento horizontal.
+
+El periodo inicial es el mes y año del dispositivo. Los años disponibles incluyen los años de movimientos activos de la wallet, el año actual y sus adyacentes, y el año seleccionado. El periodo permanece en memoria. Firefox y WebKit no se ejecutaron en esta etapa.
+
+Totales verificados (MXN):
+
+| Wallet | Periodo | Ingresos | Gastos | Balance |
+| --- | --- | ---: | ---: | ---: |
+| Personal de Jorge | Octubre 2026 | 25,000.00 | 185.50 | 24,814.50 |
+| Personal de Jorge | Noviembre 2026 | 25,000.00 | 230.75 | 24,769.25 |
+| Compartida | Octubre 2026 | 8,000.00 | 0.00 | 8,000.00 |
+| Compartida | Noviembre 2026 | 0.00 | 1,450.25 | -1,450.25 |
+
+Archivos creados en apps/frontend/src:
+- utils/money.ts: conversión exacta, rechazo de formatos inválidos o centavos inseguros y formato MXN.
+- composables/useFinancialSummary.ts: filtro por wallet/periodo y agregación en centavos.
+- components/SummaryCard.vue: tarjeta tipada con variantes visuales.
+- __tests__/financialSummary.spec.ts: dinero, ambas wallets, periodos, soft delete y conexión de controles con tarjetas.
+
+Archivos modificados:
+- apps/frontend/src/views/DashboardView.vue: tarjetas, controles y lista temporal del periodo.
+- apps/frontend/src/__tests__/App.spec.ts: fecha fija para mantener reproducible el test con filtro mensual.
+- docs/docs/ui/dashboard.md y este roadmap: alcance y resultados de la etapa.
+
+No se agregaron dependencias. Gráficas, formularios, HTTP, persistencia y autenticación real permanecen pendientes.

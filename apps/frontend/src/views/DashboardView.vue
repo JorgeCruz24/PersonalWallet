@@ -1,14 +1,28 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useTransactionStore } from '@/stores/transaction.store'
 import { storeToRefs } from 'pinia'
 import { useWalletStore } from '@/stores/wallet.store'
-import { useTransactionStore } from '@/stores/transaction.store'
+import { useFinancialSummary } from '@/composables/useFinancialSummary'
+import { decimalToCents, formatMoney } from '@/utils/money'
+import SummaryCard from '@/components/SummaryCard.vue'
 import { demoUser } from '@/mocks/wallets'
 import WalletSelector from '@/components/layout/WalletSelector.vue'
 import LayoutIcon from '@/components/layout/LayoutIcon.vue'
 
 const { selectedWallet } = storeToRefs(useWalletStore())
-const { transactions } = storeToRefs(useTransactionStore())
-const currencyFormatter = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' })
+const { selectedMonth, selectedYear, periodTransactions: transactions, summary } = useFinancialSummary()
+const months = Array.from({ length: 12 }, (_, index) =>
+  new Intl.DateTimeFormat('es-MX', { month: 'long', timeZone: 'UTC' }).format(new Date(Date.UTC(2026, index, 1))),
+)
+const years = computed(() => {
+  const currentYear = new Date().getFullYear()
+  return Array.from(new Set([currentYear - 1, currentYear, currentYear + 1, selectedYear.value,
+    ...transactionYears.value])).sort((a, b) => a - b)
+})
+const transactionStore = useTransactionStore()
+const transactionYears = computed(() => transactionStore.transactions.map((transaction) => Number(transaction.date.slice(0, 4))))
+
 const dateFormatter = new Intl.DateTimeFormat('es-MX', { dateStyle: 'medium', timeZone: 'UTC' })
 </script>
 
@@ -40,14 +54,34 @@ const dateFormatter = new Intl.DateTimeFormat('es-MX', { dateStyle: 'medium', ti
             : 'Un espacio para administrar juntos los ingresos y gastos compartidos, sin reparto automático.' }}
         </p>
       </div>
-      <div class="mt-10 border-t border-[var(--color-line)] pt-6">
-        <p class="text-xs font-semibold">Tu resumen financiero, próximamente</p>
-        <p class="mt-2 max-w-lg text-xs leading-6 text-[var(--color-muted)]">Aquí podrás consultar tus balances, explorar gastos por categoría y registrar movimientos.</p>
+    </section>
+    <section class="mt-7" aria-labelledby="summary-heading">
+      <div class="mb-4 flex flex-wrap items-end justify-between gap-4">
+        <h3 id="summary-heading" class="text-lg font-semibold">Resumen financiero</h3>
+        <div class="flex flex-wrap gap-3">
+          <label class="text-xs text-[var(--color-muted)]">
+            Mes
+            <select v-model.number="selectedMonth" class="mt-1 block rounded-xl border border-[var(--color-line)] bg-white px-3 py-2 text-sm text-[var(--color-ink)]">
+              <option v-for="(month, index) in months" :key="month" :value="index + 1">{{ month }}</option>
+            </select>
+          </label>
+          <label class="text-xs text-[var(--color-muted)]">
+            Año
+            <select v-model.number="selectedYear" class="mt-1 block rounded-xl border border-[var(--color-line)] bg-white px-3 py-2 text-sm text-[var(--color-ink)]">
+              <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
+            </select>
+          </label>
+        </div>
+      </div>
+      <div class="grid gap-4 xl:grid-cols-3" aria-live="polite" aria-atomic="true">
+        <SummaryCard title="Ingresos" :cents="summary.income" variant="income" />
+        <SummaryCard title="Gastos" :cents="summary.expenses" variant="expense" />
+        <SummaryCard title="Balance" :cents="summary.balance" variant="balance" />
       </div>
     </section>
     <section class="workspace-panel mt-7" aria-labelledby="transactions-heading">
       <h3 id="transactions-heading" class="text-lg font-semibold">Movimientos de demostración</h3>
-      <p class="mt-2 text-xs leading-6 text-[var(--color-muted)]">Lista temporal de {{ selectedWallet.name }} · Todos los meses · MXN</p>
+      <p class="mt-2 text-xs leading-6 text-[var(--color-muted)]">Lista temporal de {{ selectedWallet.name }} · {{ months[selectedMonth - 1] }} {{ selectedYear }} · MXN</p>
       <ul v-if="transactions.length" class="mt-4 divide-y divide-[var(--color-line)]" data-testid="transactions">
         <li v-for="transaction in transactions" :key="transaction.id" class="flex flex-wrap items-center justify-between gap-3 py-4">
           <div class="min-w-0">
@@ -58,11 +92,11 @@ const dateFormatter = new Intl.DateTimeFormat('es-MX', { dateStyle: 'medium', ti
             </p>
           </div>
           <span class="shrink-0 text-sm font-semibold tabular-nums">
-            {{ transaction.type === 'INCOME' ? '+' : '−' }}{{ currencyFormatter.format(Number(transaction.amount)) }}
+            {{ transaction.type === 'INCOME' ? '+' : '−' }}{{ formatMoney(decimalToCents(transaction.amount)) }}
           </span>
         </li>
       </ul>
-      <p v-else class="mt-4 text-sm text-[var(--color-muted)]">No hay movimientos activos en este espacio.</p>
+      <p v-else class="mt-4 text-sm text-[var(--color-muted)]">No hay movimientos activos en este periodo.</p>
     </section>
     <p class="mt-4 text-[11px] leading-5 text-[var(--color-muted)]">Vista de demostración · Wallets y usuarios simulados · MXN</p>
   </section>
